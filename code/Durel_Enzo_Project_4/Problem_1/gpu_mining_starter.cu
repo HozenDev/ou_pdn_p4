@@ -98,12 +98,29 @@ int main(int argc, char* argv[]) {
     // TODO Problem 1: perform this hash generation in the GPU
     // Hint: You need both nonces and transactions to compute a hash.
     unsigned int* hash_array = (unsigned int*)calloc(trials, sizeof(unsigned int));
-    for (int i = 0; i < trials; ++i)
-        hash_array[i] = generate_hash(nonce_array[i], i, transactions, n_transactions);
+    unsigned int* device_hash_array;
+    unsigned int* device_transactions;
 
+    cuda_ret = cudaMalloc((void**)&device_transactions, n_transactions * sizeof(unsigned int));
+    err_check(cuda_ret, (char*)"Unable to allocate transactions to device memory!", 4);
+    cuda_ret = cudaMemcpy(device_transactions, transactions, n_transactions * sizeof(unsigned int), cudaMemcpyHostToDevice);
+    err_check(cuda_ret, (char*)"Unable to copy transactions to device memory!", 5);
+    cuda_ret = cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
+    err_check(cuda_ret, (char*)"Unable to allocate hash array to device memory!", 6);
+    hash_kernel<<<dimGrid, dimBlock>>> (device_hash_array,
+					device_nonce_array,
+					device_transactions,
+					n_transactions,
+					trials);
+
+    cuda_ret = cudaDeviceSynchronize();
+    err_check(cuda_ret, (char*)"Unable to launch hash kernel!", 7);
+    cuda_ret = cudaMemcpy(hash_array, device_hash_array, trials * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    err_check(cuda_ret, (char*)"Unable to read hash from device memory!", 8);
+    
     // Free memory
     free(transactions);
-
+    cudaFree(device_transactions);
 
     // ------ Step 3: Find the nonce with the minimum hash value ------ //
 
@@ -119,7 +136,9 @@ int main(int argc, char* argv[]) {
 
     // Free memory
     free(nonce_array);
+    cudaFree(device_nonce_array);
     free(hash_array);
+    cudaFree(device_hash_array);
 
     stopTime(&timer);
     // ----------------------------------------------------------------------------- //
@@ -151,7 +170,13 @@ int main(int argc, char* argv[]) {
     return 0;
 } // End Main -------------------------------------------- //
 
-
+__global__
+void hash_kernel(unsigned int* hash_array, unsigned int* nonce_array, unsigned int* transactions, unsigned int n_transactions, unsigned int trials) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < trials) {
+	hash_array[i] = generate_hash(nonce_array[i], i, transactions, n_transactions);
+    }
+}    
 
 /* Generate Hash ----------------------------------------- //
 *   Generates a hash value from a nonce and transaction list.
