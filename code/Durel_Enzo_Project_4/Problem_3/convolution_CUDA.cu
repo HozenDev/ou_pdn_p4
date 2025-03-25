@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "support.h"
-#include "blur_kernel.cu"
+#include "kernel.cu"
 
 #define BILLION  1000000000.0
 #define MAX_LINE_LENGTH 25000
