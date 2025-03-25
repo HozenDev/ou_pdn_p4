@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&d_min_hash, num_blocks * sizeof(unsigned int));
     cudaMalloc((void**)&d_min_nonce, num_blocks * sizeof(unsigned int));
 
-    printf("Before step reduction\n");
+    printf("Before step reduction: %f\n", elapsedTime(timer));
     
     reduction_kernel <<< dimGrid, dimBlock, 2 * dimBlock.x * sizeof(unsigned int) >>>(
 	device_hash_array,
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
 	trials
 	);
 
-    printf("After step reduction\n");
+    printf("After step reduction: %f\n", elapsedTime(timer));
     
     unsigned int* h_min_hash = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
     unsigned int* h_min_nonce = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
