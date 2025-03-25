@@ -21,6 +21,9 @@
 source /home/oucspdnta/activate_pdn_env.sh
 module load CUDA/10.1.243-GCC-8.3.0
 
+cd Problem_1/serial
+make run
+
 # To run all the problems and get all results
 # python3 -u autograder_project_4.py
 
@@ -28,7 +31,7 @@ module load CUDA/10.1.243-GCC-8.3.0
 # python3 -u autograder_problem_4_1.py
 
 # To run just problem 2's autograder
-python3 -u autograder_problem_4_2.py
+# python3 -u autograder_problem_4_2.py
 
 # To run just problem 3's autograder
 # python3 -u autograder_problem_4_3.py

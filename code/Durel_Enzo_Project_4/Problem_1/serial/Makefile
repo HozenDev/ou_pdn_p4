@@ -4,7 +4,7 @@ all: make_serial
 # ------------------------------------------------------------------------------- #
 
 # input file and size
-FILE     = debug_1000.csv
+FILE     = debug_1k.csv
 SIZE	 = 1000
 
 # number of trials to run
