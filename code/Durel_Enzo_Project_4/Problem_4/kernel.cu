@@ -35,12 +35,11 @@ void maxpooling_kernel(int* in, int* out, int w, int h, int maxpooling_size)
 {
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
-    int blurSize = filter_size / 2;
+    int blurSize = maxpooling_size / 2;
+    int max = 0;
 
     if (Col < w && Row < h)
     {
-	int pixVal = 0;
-	
 	for (int blurRow = -blurSize; blurRow < blurSize+1; ++blurRow)
 	{
 	    for (int blurCol = -blurSize; blurCol < blurSize+1; ++blurCol)
@@ -50,8 +49,8 @@ void maxpooling_kernel(int* in, int* out, int w, int h, int maxpooling_size)
 
 		if (curRow > -1 && curRow < h && curCol > -1 && curCol < w)
 		{
-		    if (outputMatrix_h[curRow*h + curCol] > max)
-			max = outputMatrix_h[curRow*h + curCol];
+		    if (out[curRow*h + curCol] > max)
+			max = out[curRow*h + curCol];
 		}
 	    }
 	}
