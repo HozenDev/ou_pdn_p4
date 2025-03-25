@@ -31,30 +31,32 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 }
 
 __global__
-void maxpooling_kernel(int* in, int* out, int w, int h, int maxpooling_size)
+void maxpooling_kernel(int* in, int* out, int w, int h, int pool_size)
 {
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
-    int blurSize = maxpooling_size / 2;
-    int max = 0;
+    int half = pool_size / 2;
 
     if (Col < w && Row < h)
     {
-	for (int blurRow = -blurSize; blurRow < blurSize+1; ++blurRow)
-	{
-	    for (int blurCol = -blurSize; blurCol < blurSize+1; ++blurCol)
-	    {
-		int curRow = Row + blurRow;
-		int curCol = Col + blurCol;
+        int maxVal = INT_MIN;
 
-		if (curRow > -1 && curRow < h && curCol > -1 && curCol < w)
-		{
-		    if (out[curRow*h + curCol] > max)
-			max = out[curRow*h + curCol];
-		}
-	    }
-	}
+        for (int dy = -half; dy <= half; ++dy)
+        {
+            for (int dx = -half; dx <= half; ++dx)
+            {
+                int curRow = Row + dy;
+                int curCol = Col + dx;
 
-	out[Row * w + Col] = max;
+                if (curRow >= 0 && curRow < h && curCol >= 0 && curCol < w)
+                {
+                    int val = in[curRow * w + curCol];
+                    if (val > maxVal)
+                        maxVal = val;
+                }
+            }
+        }
+
+        out[Row * w + Col] = maxVal;
     }
 }
