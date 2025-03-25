@@ -87,8 +87,8 @@ int main (int argc, char *argv[])
     int* input_matrix_d = NULL;
     int* output_matrix_d = NULL;
     int* filter_matrix_d = NULL;
-    dim3 dimGrid(n_row, n_col);
-    dim3 dimBlock(5, 5);
+    dim3 dimGrid(n_row, n_col, 1);
+    dim3 dimBlock(5, 5, 1);
 
     cudaMalloc((void**)&input_matrix_d, n_row * n_col * sizeof(int));
     cudaMalloc((void**)&output_matrix_d, n_row * n_col * sizeof(int));
@@ -102,7 +102,7 @@ int main (int argc, char *argv[])
     cudaMemcpy(input_matrix_d, inputMatrix_h, n_row * n_col * sizeof(int), cudaMemcpyDeviceToHost);
     cudaMemcpy(filter_matrix_d, filterMatrix_h, 5*5 * sizeof(int), cudaMemcpyDeviceToHost);
     stopTime(&timer);
-    fprintf(stdout, "Copy H-D: %.20f", elapsedTime(timer));
+    fprintf(stdout, "Copy H-D: %.20f\n", elapsedTime(timer));
     fprintf(timeFile, "%.20f", elapsedTime(timer));
     
     // ************************* //
@@ -112,7 +112,7 @@ int main (int argc, char *argv[])
     startTime(&timer);
     blur_kernel<<<dimGrid, dimBlock>>>(input_matrix_d, output_matrix_d, filter_matrix_d, n_row, n_col, 5);
     stopTime(&timer);
-    fprintf(stdout, "Kernel 1: %.20f", elapsedTime(timer));
+    fprintf(stdout, "Kernel 1: %.20f\n", elapsedTime(timer));
     fprintf(timeFile, "%.20f", elapsedTime(timer));
 
     // **************************************** //
@@ -122,7 +122,7 @@ int main (int argc, char *argv[])
     startTime(&timer);
     cudaMemcpy(outputMatrix_h, output_matrix_d, n_row * n_col * sizeof(int), cudaMemcpyDeviceToHost);
     stopTime(&timer);
-    fprintf(stdout, "Copy D-H: %.20f", elapsedTime(timer));
+    fprintf(stdout, "Copy D-H: %.20f\n", elapsedTime(timer));
     fprintf(timeFile, "%.20f", elapsedTime(timer));
     
     // --------------------------------------------------------------------------- //
