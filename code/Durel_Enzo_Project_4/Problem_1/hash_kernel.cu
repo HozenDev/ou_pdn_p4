@@ -32,13 +32,11 @@ void hash_kernel(unsigned int* hash_array, unsigned int* nonce_array, unsigned i
 } // End Hash Kernel //
 
 __global__
-void reduce_min_hash(
-    const unsigned int* hash_array,
-    const unsigned int* nonce_array,
-    unsigned int* min_hash_block,
-    unsigned int* min_nonce_block,
-    int array_size,
-)
+void reduce_min_hash(const unsigned int* hash_array,
+		     const unsigned int* nonce_array,
+		     unsigned int* min_hash_block,
+		     unsigned int* min_nonce_block,
+		     int array_size)
 {
     __shared__ unsigned int shared[BLOCK_SIZE];
 
