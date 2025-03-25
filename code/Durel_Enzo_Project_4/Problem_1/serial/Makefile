@@ -17,7 +17,6 @@ OUT_B    = 1k_10k
 
 
 run:
-	clear 
 	make
 	./serial_mining $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
 	./serial_mining $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
