@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
     unsigned int min_hash = UINT_MAX;
     unsigned int min_nonce = 0;
     for (int i = 0; i < num_blocks; i++) {
-        if (h_min_hash[i] < final_min_hash) {
+        if (h_min_hash[i] < min_hash) {
             min_hash = h_min_hash[i];
             min_nonce = h_min_nonce[i];
         }
