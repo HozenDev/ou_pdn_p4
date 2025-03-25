@@ -9,6 +9,7 @@
 #include <time.h>
 #include <cstdio>
 #include <cuda.h>
+#include <limits.h>
 
 #include "const.h"
 #include "support.h"
@@ -127,13 +128,13 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&d_min_hash, num_blocks * sizeof(unsigned int));
     cudaMalloc((void**)&d_min_nonce, num_blocks * sizeof(unsigned int));
     
-    reduce_min_hash <<< dimGrid, dimBlock >>> (
-        device_hash_array,
-        device_nonce_array,
-        d_min_hash,
-        d_min_nonce,
-        trials
-    );
+    reduce_min_hash <<< dimGrid, dimBlock, 2 * dimBlock.x * sizeof(unsigned int) >>>(
+	device_hash_array,
+	device_nonce_array,
+	d_min_hash,
+	d_min_nonce,
+	trials
+	);
     
     unsigned int* h_min_hash = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
     unsigned int* h_min_nonce = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
