@@ -129,10 +129,7 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&d_min_hash, num_blocks * sizeof(unsigned int));
     cudaMalloc((void**)&d_min_nonce, num_blocks * sizeof(unsigned int));
 
-    int threadsPerBlock = 256;
-    int numBlocks = (trials + threadsPerBlock * 2 - 1) / (threadsPerBlock * 2);
-    
-    reduction_kernel <<< numBlocks, threadsPerBlock, 2 * threadsPerBlock * sizeof(unsigned int) >>>(
+    reduction_kernel <<< dimGrid, dimBlock >>>(
 	device_hash_array,
 	device_nonce_array,
 	d_min_hash,

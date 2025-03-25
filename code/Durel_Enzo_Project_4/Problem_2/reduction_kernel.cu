@@ -10,7 +10,7 @@ __global__ void reduction_kernel(
     unsigned int* min_nonce_out,
     int N
 ) {
-    extern __shared__ unsigned int shared[];
+    __shared__ unsigned int shared[2*BLOCK_SIZE];
     unsigned int* hash_shared = shared;
     unsigned int* nonce_shared = &shared[blockDim.x];
 
