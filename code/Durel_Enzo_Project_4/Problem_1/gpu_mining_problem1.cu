@@ -132,6 +132,7 @@ int main(int argc, char* argv[]) {
         device_nonce_array,
         d_min_hash,
         d_min_nonce,
+	num_blocks,
         trials
     );
     
