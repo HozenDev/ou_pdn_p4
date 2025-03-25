@@ -8,6 +8,7 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
     if (Col < w && Row < h)
     {
 	int pixVal = 0;
+	int pixels = 0;
 	
 	for (int blurRow = -blurSize; blurRow < blurSize+1; ++blurRow)
 	{
@@ -20,11 +21,13 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 		{
 		    int filter_x = blurCol + blurSize;
 		    int filter_y = blurRow + blurSize;
-		    pixVal += in[curRow * w + curCol] * filter[filter_y * filter_size + filter_x];
+		    int filter_value = filter[filter_y * filter_size + filter_x];
+		    pixVal += in[curRow * w + curCol] * filter_value;
+		    pixels += filter_value;
 		}
 	    }
 	}
 
-	out [Row * w + Col] = pixVal;
+	out [Row * w + Col] = pixVal / pixels;
     }
 }
