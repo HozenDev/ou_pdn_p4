@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
     err_check(cuda_ret, (char*)"Unable to copy transactions to device memory!", 5);
     cuda_ret = cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
     err_check(cuda_ret, (char*)"Unable to allocate hash array to device memory!", 6);
-
+    
     // Launch the hash kernel
     hash_kernel <<< dimGrid, dimBlock >>> (
 	device_hash_array, // put hashes into here
@@ -128,14 +128,18 @@ int main(int argc, char* argv[]) {
     unsigned int* d_min_nonce;
     cudaMalloc((void**)&d_min_hash, num_blocks * sizeof(unsigned int));
     cudaMalloc((void**)&d_min_nonce, num_blocks * sizeof(unsigned int));
+
+    printf("Before step reduction\n");
     
-    reduce_min_hash <<< dimGrid, dimBlock, 2 * dimBlock.x * sizeof(unsigned int) >>>(
+    reduction_kernel <<< dimGrid, dimBlock, 2 * dimBlock.x * sizeof(unsigned int) >>>(
 	device_hash_array,
 	device_nonce_array,
 	d_min_hash,
 	d_min_nonce,
 	trials
 	);
+
+    printf("After step reduction\n");
     
     unsigned int* h_min_hash = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
     unsigned int* h_min_nonce = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));

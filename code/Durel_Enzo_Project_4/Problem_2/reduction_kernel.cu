@@ -3,7 +3,7 @@
 #include <limits.h>
 
 // Tree-based reduction to find min hash and corresponding nonce
-__global__ void reduce_min_hash(
+__global__ void reduction_kernel(
     const unsigned int* hash_array,
     const unsigned int* nonce_array,
     unsigned int* min_hash_out,
@@ -26,17 +26,16 @@ __global__ void reduce_min_hash(
         nonce_shared[local_idx] = 0;
     }
 
-    __syncthreads();
 
     // Tree-based reduction
     for (unsigned int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
+        __syncthreads();
         if (local_idx < stride) {
             if (hash_shared[local_idx + stride] < hash_shared[local_idx]) {
                 hash_shared[local_idx] = hash_shared[local_idx + stride];
                 nonce_shared[local_idx] = nonce_shared[local_idx + stride];
             }
         }
-        __syncthreads();
     }
 
     // Write block-level result
