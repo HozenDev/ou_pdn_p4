@@ -1,8 +1,8 @@
 NVCC        = nvcc
 NVCC_FLAGS  = -O3 -I/usr/local/cuda/include  
 LD_FLAGS    = -lcudart -L/usr/local/cuda/lib64
-EXE			= gpu_mining_problem2
-OBJ			= gpu_mining_problem2.o support.o
+EXE	    = gpu_mining_problem2
+OBJ	    = gpu_mining_problem2.o support.o
 
 default: $(EXE)
 
