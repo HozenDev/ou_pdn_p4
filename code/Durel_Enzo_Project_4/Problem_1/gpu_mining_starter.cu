@@ -107,11 +107,13 @@ int main(int argc, char* argv[]) {
     err_check(cuda_ret, (char*)"Unable to copy transactions to device memory!", 5);
     cuda_ret = cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
     err_check(cuda_ret, (char*)"Unable to allocate hash array to device memory!", 6);
-    hash_kernel<<<dimGrid, dimBlock>>> (device_hash_array,
-					device_nonce_array,
-					device_transactions,
-					n_transactions,
-					trials);
+    gpu_generate_hash <<< dimGrid, dimBlock >>> (
+	device_hash_array,
+	device_nonce_array,
+	device_transactions,
+	n_transactions,
+	trials
+	);
 
     cuda_ret = cudaDeviceSynchronize();
     err_check(cuda_ret, (char*)"Unable to launch hash kernel!", 7);
@@ -170,8 +172,8 @@ int main(int argc, char* argv[]) {
     return 0;
 } // End Main -------------------------------------------- //
 
-__global__
-void hash_kernel(unsigned int* hash_array, unsigned int* nonce_array, unsigned int* transactions, unsigned int n_transactions, unsigned int trials) {
+__global__ void gpu_generate_hash(unsigned int* hash_array, unsigned int* nonce_array, unsigned int* transactions, unsigned int n_transactions, unsigned int trials)
+{
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < trials) {
 	hash_array[i] = generate_hash(nonce_array[i], i, transactions, n_transactions);
