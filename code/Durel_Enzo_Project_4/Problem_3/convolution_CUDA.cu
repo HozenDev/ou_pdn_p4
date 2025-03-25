@@ -110,7 +110,7 @@ int main (int argc, char *argv[])
     // ************************* //
     
     startTime(&timer);
-    blur_kernel<<<dimGrid, dimBlock>>>(input_matrix_d, output_matrix_d, filter_matrix_d, n_row, n_col, (int) 5/2);
+    blur_kernel<<<dimGrid, dimBlock>>>(input_matrix_d, output_matrix_d, filter_matrix_d, n_row, n_col, 5);
     stopTime(&timer);
     fprintf(stdout, "Kernel 1: %.20f", elapsedTime(timer));
     fprintf(timeFile, "%.20f", elapsedTime(timer));
