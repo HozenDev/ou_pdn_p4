@@ -16,9 +16,11 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 		int curRow = Row + blurRow;
 		int curCol = Col + blurCol;
 
-		if (curRow >= -2 && curRow < h && curCol >= -2 && curCol < w)
+		if (curRow > -1 && curRow < h && curCol > -1 && curCol < w)
 		{
-		    pixVal += in[curRow * w + curCol] * filter[blurRow * filter_size + blurCol];
+		    int filter_x = blurCol + blurSize;
+		    int filter_y = blurRow + blurSize;
+		    pixVal += in[curRow * w + curCol] * filter[filter_y * filter_size + filter_x];
 		}
 	    }
 	}
