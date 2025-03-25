@@ -34,7 +34,7 @@ run:
 # ------------------------------------------------------------------------------- #
 
 gpu_mining_problem1.o: gpu_mining_problem1.cu nonce_kernel.cu hash_kernel.cu support.h
-	$(NVCC) -c -o $@ gpu_mining_starter.cu $(NVCC_FLAGS) $(LD_FLAGS)
+	$(NVCC) -c -o $@ gpu_mining_problem1.cu $(NVCC_FLAGS) $(LD_FLAGS)
 
 support.o: support.cu support.h
 	$(NVCC) -c -o $@ support.cu $(NVCC_FLAGS) $(LD_FLAGS)
