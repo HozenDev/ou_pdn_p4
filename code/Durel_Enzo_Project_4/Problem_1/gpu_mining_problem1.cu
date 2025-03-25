@@ -10,25 +10,14 @@
 #include <cstdio>
 #include <cuda.h>
 
+#include "const.h"
 #include "support.h"
 #include "hash_kernel.cu"
 #include "nonce_kernel.cu"
 
-// to activate debug statements
-#define DEBUG 1
-
-// program constants
-#define BLOCK_SIZE 1024
-#define SEED       123
-
-// solution constants
-#define MAX     123123123
-#define TARGET  20
-
 // functions used
 void read_file(char* file, unsigned int* transactions, unsigned int n_transactions);
 void err_check(cudaError_t ret, char* msg, int exit_code);
-
 
 /* Main ------------------ //
 *   This is the main program.
@@ -130,16 +119,34 @@ int main(int argc, char* argv[]) {
 
     // ------ Step 3: Find the nonce with the minimum hash value ------ //
 
-    // TODO Problem 2: find the minimum in the GPU by reduction
-    unsigned int min_hash  = MAX;
-    unsigned int min_nonce = MAX;
-    for (int i = 0; i < trials; i++) {
-        if (hash_array[i] < min_hash) {
-            min_hash  = hash_array[i];
-            min_nonce = nonce_array[i];
+    unsigned int* d_min_hash;
+    unsigned int* d_min_nonce;
+    cudaMalloc((void**)&d_min_hash, BLOCK_SIZE * sizeof(unsigned int));
+    cudaMalloc((void**)&d_min_nonce, BLOCK_SIZE * sizeof(unsigned int));
+    
+    reduce_min_hash <<< dimGrid, dimBlock >>> (
+        device_hash_array,
+        device_nonce_array,
+        d_min_hash,
+        d_min_nonce,
+        trials
+    );
+    
+    unsigned int* h_min_hash = (unsigned int*)malloc(BLOCK_SIZE * sizeof(unsigned int));
+    unsigned int* h_min_nonce = (unsigned int*)malloc(BLOCK_SIZE * sizeof(unsigned int));
+    cudaMemcpy(h_min_hash, d_min_hash, blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_min_nonce, d_min_nonce, blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+
+    // Final reduction on CPU
+    unsigned int min_hash = UINT_MAX;
+    unsigned int min_nonce = 0;
+    for (int i = 0; i < blocks; i++) {
+        if (h_min_hash[i] < final_min_hash) {
+            min_hash = h_min_hash[i];
+            min_nonce = h_min_nonce[i];
         }
     }
-
+    
     // Free memory
     free(nonce_array);
     cudaFree(device_nonce_array);
