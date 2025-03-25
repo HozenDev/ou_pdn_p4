@@ -80,8 +80,9 @@ int main(int argc, char* argv[]) {
     cuda_ret = cudaMemcpy(nonce_array, device_nonce_array, trials * sizeof(unsigned int), cudaMemcpyDeviceToHost);
     err_check(cuda_ret, (char*)"Unable to read nonce from device memory!", 3);
 
-
+    // ********************************************** //
     // ------ Step 2: Generate the hash values ------ //
+    // ********************************************** //
 
     // TODO Problem 1: perform this hash generation in the GPU
     // Hint: You need both nonces and transactions to compute a hash.
@@ -117,12 +118,14 @@ int main(int argc, char* argv[]) {
     free(transactions);
     cudaFree(device_transactions);
 
+    // **************************************************************** //
     // ------ Step 3: Find the nonce with the minimum hash value ------ //
+    // **************************************************************** //
 
     unsigned int* d_min_hash;
     unsigned int* d_min_nonce;
-    cudaMalloc((void**)&d_min_hash, BLOCK_SIZE * sizeof(unsigned int));
-    cudaMalloc((void**)&d_min_nonce, BLOCK_SIZE * sizeof(unsigned int));
+    cudaMalloc((void**)&d_min_hash, num_blocks * sizeof(unsigned int));
+    cudaMalloc((void**)&d_min_nonce, num_blocks * sizeof(unsigned int));
     
     reduce_min_hash <<< dimGrid, dimBlock >>> (
         device_hash_array,
@@ -132,15 +135,15 @@ int main(int argc, char* argv[]) {
         trials
     );
     
-    unsigned int* h_min_hash = (unsigned int*)malloc(BLOCK_SIZE * sizeof(unsigned int));
-    unsigned int* h_min_nonce = (unsigned int*)malloc(BLOCK_SIZE * sizeof(unsigned int));
-    cudaMemcpy(h_min_hash, d_min_hash, blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(h_min_nonce, d_min_nonce, blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    unsigned int* h_min_hash = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
+    unsigned int* h_min_nonce = (unsigned int*)malloc(num_blocks * sizeof(unsigned int));
+    cudaMemcpy(h_min_hash, d_min_hash, num_blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_min_nonce, d_min_nonce, num_blocks * sizeof(unsigned int), cudaMemcpyDeviceToHost);
 
     // Final reduction on CPU
     unsigned int min_hash = UINT_MAX;
     unsigned int min_nonce = 0;
-    for (int i = 0; i < blocks; i++) {
+    for (int i = 0; i < num_blocks; i++) {
         if (h_min_hash[i] < final_min_hash) {
             min_hash = h_min_hash[i];
             min_nonce = h_min_nonce[i];
@@ -152,6 +155,10 @@ int main(int argc, char* argv[]) {
     cudaFree(device_nonce_array);
     free(hash_array);
     cudaFree(device_hash_array);
+    cudaFree(d_min_hash);
+    cudaFree(d_min_nonce);
+    free(h_min_hash);
+    free(h_min_nonce);
 
     stopTime(&timer);
     // ----------------------------------------------------------------------------- //
