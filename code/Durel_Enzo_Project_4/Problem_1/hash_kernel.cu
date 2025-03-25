@@ -36,10 +36,9 @@ void reduce_min_hash(const unsigned int* hash_array,
 		     const unsigned int* nonce_array,
 		     unsigned int* min_hash_block,
 		     unsigned int* min_nonce_block,
-		     unsigned int num_blocks,
-		     unsigned int array_size)
+		     int array_size)
 {
-    __shared__ unsigned int shared[num_blocks];
+    __shared__ unsigned int shared[BLOCK_SIZE];
 
     unsigned int* hash_shared = shared;
     unsigned int* nonce_shared = &shared[blockDim.x];
