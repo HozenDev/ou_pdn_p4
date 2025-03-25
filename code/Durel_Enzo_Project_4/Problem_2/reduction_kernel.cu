@@ -2,52 +2,45 @@
 
 #include <limits.h>
 
+// Tree-based reduction to find min hash and corresponding nonce
 __global__ void reduction_kernel(
     const unsigned int* hash_array,
     const unsigned int* nonce_array,
-    unsigned int* block_min_hashes,
-    unsigned int* block_min_nonces,
+    unsigned int* min_hash_out,
+    unsigned int* min_nonce_out,
     int N
 ) {
-    extern __shared__ unsigned int sdata[];
+    extern __shared__ unsigned int shared[];
+    unsigned int* hash_shared = shared;
+    unsigned int* nonce_shared = &shared[blockDim.x];
 
-    unsigned int* s_hashes = sdata;
-    unsigned int* s_nonces = &sdata[blockDim.x];
+    int global_idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int local_idx = threadIdx.x;
 
-    int tid = threadIdx.x;
-    int i = blockIdx.x * blockDim.x * 2 + threadIdx.x;
-
-    // Load input into shared memory
-    unsigned int hash1 = (i < N) ? hash_array[i] : UINT_MAX;
-    unsigned int hash2 = (i + blockDim.x < N) ? hash_array[i + blockDim.x] : UINT_MAX;
-    unsigned int nonce1 = (i < N) ? nonce_array[i] : 0;
-    unsigned int nonce2 = (i + blockDim.x < N) ? nonce_array[i + blockDim.x] : 0;
-
-    if (hash1 < hash2) {
-        s_hashes[tid] = hash1;
-        s_nonces[tid] = nonce1;
+    // Load data into shared memory
+    if (global_idx < N) {
+        hash_shared[local_idx] = hash_array[global_idx];
+        nonce_shared[local_idx] = nonce_array[global_idx];
     } else {
-        s_hashes[tid] = hash2;
-        s_nonces[tid] = nonce2;
+        hash_shared[local_idx] = UINT_MAX;
+        nonce_shared[local_idx] = 0;
     }
 
-    __syncthreads();
-
-    // Reduction
-    for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
-        if (tid < s) {
-            if (s_hashes[tid + s] < s_hashes[tid]) {
-                s_hashes[tid] = s_hashes[tid + s];
-                s_nonces[tid] = s_nonces[tid + s];
+    // Tree-based reduction
+    for (unsigned int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
+        __syncthreads();
+        if (local_idx < stride) {
+            if (hash_shared[local_idx + stride] < hash_shared[local_idx]) {
+                hash_shared[local_idx] = hash_shared[local_idx + stride];
+                nonce_shared[local_idx] = nonce_shared[local_idx + stride];
             }
         }
-        __syncthreads();
     }
 
-    if (tid == 0) {
-        block_min_hashes[blockIdx.x] = s_hashes[0];
-        block_min_nonces[blockIdx.x] = s_nonces[0];
+    // Write block-level result
+    if (local_idx == 0) {
+        min_hash_out[blockIdx.x] = hash_shared[0];
+        min_nonce_out[blockIdx.x] = nonce_shared[0];
     }
 }
-
 
