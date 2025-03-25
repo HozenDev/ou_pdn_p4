@@ -1,15 +1,13 @@
 #!/bin/bash
-#SBATCH --partition=parallel_programming_cpu
+#SBATCH --partition=oucspdn_gpu
 #SBATCH --exclusive
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --chdir=/home/user007/HW4/Problem_3/serial
-#SBATCH --output=/home/user007/HW4/Problem_3/serial/prob3_%J_stdout.txt
-#SBATCH --error=/home/user007/HW4/Problem_3/serial/prob3_%J_stderr.txt
-#SBATCH --time=00:05:00
+#SBATCH --chdir=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4
+#SBATCH --output=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_3/serial/prob3_serial_%J_stdout.txt
+#SBATCH --error=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_3/serial/prob3_serial_%J_stderr.txt
+#SBATCH --time=00:30:00
 #SBATCH --job-name=prob3_serial
-#SBATCH --mail-user=user007@ou.edu
-#SBATCH --mail-type=ALL
 
 #################################################
 
