@@ -26,7 +26,6 @@
 #define TARGET  20
 
 // functions used
-unsigned int generate_hash(unsigned int nonce, unsigned int index, unsigned int* transactions, unsigned int n_transactions);
 void read_file(char* file, unsigned int* transactions, unsigned int n_transactions);
 void err_check(cudaError_t ret, char* msg, int exit_code);
 
@@ -101,20 +100,25 @@ int main(int argc, char* argv[]) {
     unsigned int* device_hash_array;
     unsigned int* device_transactions;
 
+    // Allocate memory for transactions and hash array
     cuda_ret = cudaMalloc((void**)&device_transactions, n_transactions * sizeof(unsigned int));
     err_check(cuda_ret, (char*)"Unable to allocate transactions to device memory!", 4);
     cuda_ret = cudaMemcpy(device_transactions, transactions, n_transactions * sizeof(unsigned int), cudaMemcpyHostToDevice);
     err_check(cuda_ret, (char*)"Unable to copy transactions to device memory!", 5);
     cuda_ret = cudaMalloc((void**)&device_hash_array, trials * sizeof(unsigned int));
     err_check(cuda_ret, (char*)"Unable to allocate hash array to device memory!", 6);
-    gpu_generate_hash <<< dimGrid, dimBlock >>> (
-	device_hash_array,
-	device_nonce_array,
-	device_transactions,
-	n_transactions,
-	trials
+
+    // Launch the hash kernel
+    hash_kernel <<< dimGrid, dimBlock >>> (
+	device_hash_array, // put hashes into here
+	device_nonce_array, // nonces
+	trials,             // size of array
+	device_transactions, // transactions
+	n_transactions,     // size of transactions
+	MAX                 // to mod with
 	);
 
+    // Get hash from device memory
     cuda_ret = cudaDeviceSynchronize();
     err_check(cuda_ret, (char*)"Unable to launch hash kernel!", 7);
     cuda_ret = cudaMemcpy(hash_array, device_hash_array, trials * sizeof(unsigned int), cudaMemcpyDeviceToHost);
@@ -171,29 +175,6 @@ int main(int argc, char* argv[]) {
 
     return 0;
 } // End Main -------------------------------------------- //
-
-__global__ void gpu_generate_hash(unsigned int* hash_array, unsigned int* nonce_array, unsigned int* transactions, unsigned int n_transactions, unsigned int trials)
-{
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < trials) {
-	hash_array[i] = generate_hash(nonce_array[i], i, transactions, n_transactions);
-    }
-}    
-
-/* Generate Hash ----------------------------------------- //
-*   Generates a hash value from a nonce and transaction list.
-*/
-unsigned int generate_hash(unsigned int nonce, unsigned int index, unsigned int* transactions, unsigned int n_transactions) {
-
-    unsigned int hash = (nonce + transactions[0] * (index + 1)) % MAX;
-    for (int j = 1; j < n_transactions; j++) {
-        hash = (hash + transactions[j] * (index + 1)) % MAX;
-    }
-    return hash;
-
-} // End Generate Hash ---------- //
-
-
 
 /* Read File -------------------- //
 *   Reads in a file of transactions. 
