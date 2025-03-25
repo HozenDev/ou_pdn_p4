@@ -28,6 +28,6 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 	    }
 	}
 
-	out[Row * w + Col] = pixVal / pixels;
+	out[Row * w + Col] = pixVal / 9;
     }
 }
