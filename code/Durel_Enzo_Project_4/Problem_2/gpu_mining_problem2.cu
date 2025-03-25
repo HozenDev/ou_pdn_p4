@@ -15,6 +15,7 @@
 #include "support.h"
 #include "hash_kernel.cu"
 #include "nonce_kernel.cu"
+#include "reduction_kernel.cu"
 
 // functions used
 void read_file(char* file, unsigned int* transactions, unsigned int n_transactions);
