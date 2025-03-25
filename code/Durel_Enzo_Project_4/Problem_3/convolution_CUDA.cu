@@ -99,8 +99,8 @@ int main (int argc, char *argv[])
     // **************************************** //
 
     startTime(&timer);
-    cudaMemcpy(input_matrix_d, inputMatrix_h, n_row * n_col * sizeof(int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(filter_matrix_d, filterMatrix_h, 5*5 * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(input_matrix_d, inputMatrix_h, n_row * n_col * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(filter_matrix_d, filterMatrix_h, 5*5 * sizeof(int), cudaMemcpyHostToDevice);
     stopTime(&timer);
     fprintf(stdout, "Copy H-D: %.20f\n", elapsedTime(timer));
     fprintf(timeFile, "%.20f\n", elapsedTime(timer));

@@ -3,7 +3,7 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 {
     int Col = blockIdx.x * blockDim.x + threadIdx.x;
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
-    int blurSize = filter_size >> 1;
+    int blurSize = filter_size / 2;
 
     if (Col < w && Row < h)
     {
@@ -28,6 +28,6 @@ void blur_kernel(int* in, int* out, int* filter, int w, int h, int filter_size)
 	    }
 	}
 
-	out [Row * w + Col] = pixVal / pixels;
+	out[Row * w + Col] = pixVal / pixels;
     }
 }
