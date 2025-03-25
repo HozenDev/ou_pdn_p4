@@ -2,7 +2,7 @@
 
 #include <limits.h>
 
-__global__ void reduce_min(
+__global__ void reduction_kernel(
     const unsigned int* hash_array,
     const unsigned int* nonce_array,
     unsigned int* block_min_hashes,
