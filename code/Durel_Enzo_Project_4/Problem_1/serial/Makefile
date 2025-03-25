@@ -5,11 +5,11 @@ all: make_serial
 
 # input file and size
 FILE     = in_20k.csv
-SIZE	 = 1000
+SIZE	 = 20000
 
 # number of trials to run
-TRIALS_A = 5000
-TRIALS_B = 10000
+TRIALS_A = 5000000
+TRIALS_B = 10000000
 
 # output file suffix
 OUT_A    = 1k_5k
