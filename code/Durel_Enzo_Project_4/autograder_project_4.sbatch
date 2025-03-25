@@ -25,10 +25,10 @@ module load CUDA/10.1.243-GCC-8.3.0
 # python3 -u autograder_project_4.py
 
 # To run just problem 1's autograder
-python3 -u autograder_problem_4_1.py
+# python3 -u autograder_problem_4_1.py
 
 # To run just problem 2's autograder
-# python3 -u autograder_problem_4_2.py
+python3 -u autograder_problem_4_2.py
 
 # To run just problem 3's autograder
 # python3 -u autograder_problem_4_3.py
