@@ -34,7 +34,7 @@ module load CUDA/10.1.243-GCC-8.3.0
 # python3 -u autograder_problem_4_2.py
 
 # To run just problem 3's autograder
-python3 -u autograder_problem_4_3.py
+# python3 -u autograder_problem_4_3.py
 
 # To run just problem 4's autograder
-# python3 -u autograder_problem_4_4.py
+python3 -u autograder_problem_4_4.py

@@ -1,9 +1,8 @@
-
 NVCC        = nvcc
 NVCC_FLAGS  = -O3 -I/usr/local/cuda/include
 LD_FLAGS    = -lcudart -L/usr/local/cuda/lib64
-EXE	        = convolution_maxpooling_CUDA
-OBJ	        = convolution_maxpooling_CUDA.o support.o
+EXE	    = convolution_maxpooling_CUDA
+OBJ	    = convolution_maxpooling_CUDA.o support.o
 
 default: $(EXE)
 
