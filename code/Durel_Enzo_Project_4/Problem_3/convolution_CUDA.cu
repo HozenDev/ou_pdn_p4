@@ -103,7 +103,7 @@ int main (int argc, char *argv[])
     cudaMemcpy(filter_matrix_d, filterMatrix_h, 5*5 * sizeof(int), cudaMemcpyDeviceToHost);
     stopTime(&timer);
     fprintf(stdout, "Copy H-D: %.20f\n", elapsedTime(timer));
-    fprintf(timeFile, "%.20f", elapsedTime(timer));
+    fprintf(timeFile, "%.20f\n", elapsedTime(timer));
     
     // ************************* //
     //        Cuda Kernel 1      //
@@ -113,7 +113,7 @@ int main (int argc, char *argv[])
     blur_kernel<<<dimGrid, dimBlock>>>(input_matrix_d, output_matrix_d, filter_matrix_d, n_row, n_col, 5);
     stopTime(&timer);
     fprintf(stdout, "Kernel 1: %.20f\n", elapsedTime(timer));
-    fprintf(timeFile, "%.20f", elapsedTime(timer));
+    fprintf(timeFile, "%.20f\n", elapsedTime(timer));
 
     // **************************************** //
     //         Cuda Copy Device To Host         //
@@ -123,7 +123,7 @@ int main (int argc, char *argv[])
     cudaMemcpy(outputMatrix_h, output_matrix_d, n_row * n_col * sizeof(int), cudaMemcpyDeviceToHost);
     stopTime(&timer);
     fprintf(stdout, "Copy D-H: %.20f\n", elapsedTime(timer));
-    fprintf(timeFile, "%.20f", elapsedTime(timer));
+    fprintf(timeFile, "%.20f\n", elapsedTime(timer));
     
     // --------------------------------------------------------------------------- //
     // ------ Algorithm End ------------------------------------------------------ //
