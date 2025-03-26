@@ -6,7 +6,7 @@
 #SBATCH --chdir=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_4/serial
 #SBATCH --output=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_4/serial/prob4_serial_%J_stdout.txt
 #SBATCH --error=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_4/serial/prob4_serial_%J_stderr.txt
-#SBATCH --time=00:30:00
+#SBATCH --time=00:05:00
 #SBATCH --job-name=prob4_serial
 
 #################################################
