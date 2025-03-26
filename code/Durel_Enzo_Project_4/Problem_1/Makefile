@@ -4,9 +4,12 @@ LD_FLAGS    = -lcudart -L/usr/local/cuda/lib64
 EXE	    = gpu_mining_problem1 gpu_mining_starter
 OBJ	    = gpu_mining_problem1.o gpu_mining_starter.o support.o
 
-default: $(EXE)
+default: gpu_mining_problem1
 
-$(EXE):$(OBJ)
+gpu_mining_starter: gpu_mining_starter.o support.o
+	$(NVCC) -o $@ $^ $(LD_FLAGS)
+
+gpu_mining_problem1: gpu_mining_problem1.o support.o
 	$(NVCC) -o $@ $^ $(LD_FLAGS)
 
 # ------------------------------------------------------------------------------- #
@@ -25,6 +28,7 @@ OUT_B    = 20k_10m
 
 
 run:
+	make gpu_mining_starter
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
 
