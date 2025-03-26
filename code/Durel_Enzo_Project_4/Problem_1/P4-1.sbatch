@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --job-name=P4-1_gpu
-#SBATCH --time=00:30:00
+#SBATCH --time=00:05:00
 #SBATCH --job-name=P4-1
 #SBATCH --chdir=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_1
 #SBATCH --output=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_1/_P4-1_%J_stdout.txt
