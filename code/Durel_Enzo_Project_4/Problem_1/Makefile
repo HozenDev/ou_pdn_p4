@@ -25,7 +25,6 @@ OUT_B    = 20k_10m
 
 
 run:
-	make gpu_mining_starter.o
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
 
