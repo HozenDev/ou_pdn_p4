@@ -25,14 +25,14 @@ OUT_B    = 20k_10m
 
 
 run:
-	make
+	make gpu_mining_starter.o
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
 	./gpu_mining_starter $(FILE) $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
 
 
 # ------------------------------------------------------------------------------- #
 
-gpu_mining_starter.o: gpu_mining_starter.cu nonce_kernel.cu hash_kernel.cu support.h
+gpu_mining_starter.o: gpu_mining_starter.cu nonce_kernel.cu support.h
 	$(NVCC) -c -o $@ gpu_mining_starter.cu $(NVCC_FLAGS) $(LD_FLAGS)
 
 gpu_mining_problem1.o: gpu_mining_problem1.cu nonce_kernel.cu hash_kernel.cu support.h
