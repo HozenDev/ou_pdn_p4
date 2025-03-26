@@ -8,6 +8,8 @@
 #SBATCH --error=/home/oucspdn025/ou_pdn_p4/code/Durel_Enzo_Project_4/Problem_3/serial/prob3_serial_%J_stderr.txt
 #SBATCH --time=00:05:00
 #SBATCH --job-name=prob3_serial
+#SBATCH --mail-user=Enzo.B.Durel-1@ou.edu
+#SBATCH --mail-type=ALL
 
 #################################################
 
