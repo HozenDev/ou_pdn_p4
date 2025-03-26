@@ -28,7 +28,7 @@ OUT_B    = 20k_10m
 
 run:
 	make gpu_mining_starter
-	./gpu_mining_starter ../../../test_data/Problem_1_and_2/in_20k.csv $(SIZE) $(TRIALS_1) _out_$(OUT_A).csv _time_$(OUT_A).csv
+	./gpu_mining_starter ../../../test_data/Problem_1_and_2/in_20k.csv $(SIZE) $(TRIALS_A) _out_$(OUT_A).csv _time_$(OUT_A).csv
 	./gpu_mining_starter ../../../test_data/Problem_1_and_2/in_20k.csv $(SIZE) $(TRIALS_B) _out_$(OUT_B).csv _time_$(OUT_B).csv
 
 
