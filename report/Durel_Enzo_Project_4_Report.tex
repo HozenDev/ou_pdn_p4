@@ -1,0 +1,389 @@
+% Created 2025-03-25 mar. 21:02
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{lmodern} % Ensures we have the right font
+\usepackage{graphicx}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[table, xcdraw]{xcolor}
+\usepackage{fancyhdr}
+\usepackage[lined,boxed,commentsnumbered,ruled,vlined,linesnumbered]{algorithm2e}
+\SetKwComment{Comment}{$\triangleright$\ }{}
+\usepackage[left=2cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\pagestyle{fancy}
+\makeatletter
+\edef\mytitle{\@title}
+\makeatother
+\fancyhead{} % clear all fields
+\fancyhead[L]{\slshape \rightmark}
+\renewcommand{\headrulewidth}{0.1pt}
+\fancyfoot{} % clear all fields
+\fancyfoot[R]{Page \thepage}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage{titling}
+\setlength{\droptitle}{-8ex}
+\pretitle{\begin{flushleft}\Large\bfseries}
+\posttitle{\par\end{flushleft}}
+\preauthor{\begin{flushleft}\large}
+\postauthor{\end{flushleft}}
+\predate{\begin{flushleft}}
+\postdate{\end{flushleft}}
+\usepackage[normalem]{ulem}
+\usepackage{sectsty}
+\sectionfont{\underline}
+\usepackage[font={color=gray},figurename=Fig.,labelfont={it}]{caption}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{lstautogobble}  % Fix relative indenting
+\usepackage{color}          % Code coloring
+\usepackage{zi4}            % Nice font
+
+\definecolor{bluekeywords}{rgb}{0.13, 0.13, 1}
+\definecolor{greencomments}{rgb}{0, 0.5, 0}
+\definecolor{redstrings}{rgb}{0.9, 0, 0}
+\definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
+\definecolor{grayW}{rgb}{0.96,0.96,0.97}
+
+\usepackage{listings}
+\lstset{
+backgroundcolor=\color{grayW},
+autogobble,
+columns=fullflexible,
+showspaces=false,
+showtabs=false,
+breaklines=true,
+showstringspaces=false,
+breakatwhitespace=true,
+escapeinside={(*@}{@*)},
+commentstyle=\color{greencomments},
+keywordstyle=\color{bluekeywords},
+stringstyle=\color{redstrings},
+numberstyle=\color{graynumbers},
+basicstyle=\ttfamily\footnotesize,
+frame=tlbr,
+framesep=12pt,
+xleftmargin=12pt,
+tabsize=4,
+captionpos=b,
+framexleftmargin=15pt,
+framerule=0pt
+}
+\setlength{\arrayrulewidth}{0.3mm}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\usepackage[skip=0pt, parfill]{parskip}
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\parindent}{0pt}
+\usepackage[fontsize=10pt]{fontsize}
+\usepackage{setspace}
+\setstretch{1,25}
+\usepackage{forest}
+\usepackage[linesnumbered]{algorithm2e}
+\usepackage{tikz}
+\setlength{\parindent}{0pt}
+\author{Author: Enzo Durel \newline Professor: Dr. Chongle Pan}
+\date{\today}
+\title{CS5473 - Project 4}
+\hypersetup{
+ pdfauthor={Author: Enzo Durel \newline Professor: Dr. Chongle Pan},
+ pdftitle={CS5473 - Project 4},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 30.1 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{center}
+\includegraphics[width=10cm]{/home/hozen/orgmode_latex_export_img/ou_logo.png}
+\end{center}
+\thispagestyle{empty}
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\thispagestyle{empty}
+\listoftables
+\clearpage
+\pagenumbering{arabic} 
+\newpage
+\section{Problem 1}
+\label{sec:orgf3606ac}
+
+\begin{table}[htbp]
+\caption{Problem 1 Runtime}
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Implementation & Steps on GPU & 5 million trials & 10 million trials\\
+\hline
+serial\_mining.c & None & 826.3 & 5643.7\\
+\hline
+gpu\_mining\_starter.cu & Step 1 & 668.4 & 3811.6\\
+\hline
+gpu\_mining\_problem1.cu & Step 1 and 2 & 6.7 & 17.7\\
+\hline
+\end{tabular}
+\end{table}
+\subsection{Speedup}
+\label{sec:org49a2aea}
+
+We have for the starter a speedup of \(\frac{826.3}{668.4} = 1.24\) for 5 million trials and \(1.48\) for 10 million trials.\\
+
+When we compute the step 2 on cuda, we've got a really good improvement, \(\frac{826.3}{6.7} = 123.3\) for 5 million trials and a speedup of \(318.85\) for 10 million trials.\\
+
+As the problem size increases in terms of trials, the speedup increases too.
+\newpage
+\section{Problem 2}
+\label{sec:org1f82024}
+
+\begin{table}[htbp]
+\caption{Problem 2 Runtime}
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Implementation & Steps on GPU & 5 million trials & 10 million trials\\
+\hline
+serial\_mining.c & None & 826.3 & 5643.7\\
+\hline
+gpu\_mining\_starter.cu & Step 1 & 668.4 & 3811.6\\
+\hline
+gpu\_mining\_problem1.cu & Step 1 and 2 & 6.7 & 17.7\\
+\hline
+gpu\_mining\_problem2.cu & Step 1, 2 and 3 & 9.7 & 17.9\\
+\hline
+\end{tabular}
+\end{table}
+\subsection{Speedup}
+\label{sec:org0028e0b}
+
+The Speedup are \(0.69\) and \(\approx 1\) for 5 and 10 million trials.\\
+
+Although \texttt{gpu\_mining\_problem2.cu} offloads all three steps to the GPU, its runtime is comparable to (and sometimes worse than) gpu\_mining\_problem1.cu. This is because Step 3, the minimum hash reduction, is not computationally expensive, and offloading it incurs additional overhead such as kernel launch and memory copy latency. As a result, the full GPU offloading doesn't lead to further speedup beyond what was already achieved in Problem 1.
+\newpage
+\section{Problem 3}
+\label{sec:orge0d502d}
+\subsection{Problem 3 Analysis}
+\label{sec:org6d3e609}
+\subsubsection{Estimation without tiling}
+\label{sec:org5c9f2cb}
+In the original CUDA convolution kernel (without tiling), each output pixel requires:
+\begin{itemize}
+\item 25 input pixel reads (for a 5×5 filter)
+\item 1 output pixel write
+\item 25 multiplications + 25 additions = 50 compute operations
+\end{itemize}
+
+Therefore, for each pixel:
+\begin{itemize}
+\item Total global memory accesses = 26
+\item Total compute operations = 50
+\end{itemize}
+
+Compute-to-global-memory-access ratio:
+\[
+\frac{50}{26} \approx 1.92
+\]
+
+This is relatively low and implies the kernel is memory-bound.
+\subsubsection{Pseudo-Code}
+\label{sec:orgddd9cd2}
+
+To improve memory efficiency, we use tiling to load blocks of the input image into shared memory.
+
+\begin{lstlisting}[language=C,numbers=none]
+__global__ void tiled_convolution_kernel(int* input, int* output, int* filter,
+                                         int width, int height, int filter_size)
+{
+    const int TILE_SIZE = 16;
+    const int RADIUS = filter_size / 2;
+    __shared__ int tile[TILE_SIZE + 4][TILE_SIZE + 4]; // extra 4 for 5x5 filter padding
+
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+    int row = blockIdx.y * TILE_SIZE + ty;
+    int col = blockIdx.x * TILE_SIZE + tx;
+
+    // Load input into shared memory with halo
+    for (int dy = 0; dy < filter_size; ++dy) {
+        for (int dx = 0; dx < filter_size; ++dx) {
+            int global_row = row + dy - RADIUS;
+            int global_col = col + dx - RADIUS;
+            if (global_row >= 0 && global_row < height && global_col >= 0 && global_col < width) {
+                tile[ty + dy][tx + dx] = input[global_row * width + global_col];
+            } else {
+                tile[ty + dy][tx + dx] = 0;
+            }
+        }
+    }
+
+    __syncthreads();
+
+    // Compute convolution
+    if (row < height && col < width) {
+        int sum = 0;
+        for (int i = 0; i < filter_size; ++i) {
+            for (int j = 0; j < filter_size; ++j) {
+                sum += tile[ty + i][tx + j] * filter[i * filter_size + j];
+            }
+        }
+        output[row * width + col] = sum;
+    }
+}
+\end{lstlisting}
+\subsubsection{Estimate with tiling}
+\label{sec:org8c7caba}
+
+Assuming BLOCK\_SIZE = 16 and filter size = 5:
+\begin{itemize}
+\item Shared memory loads: (16 + 4)² = 400 input reads
+\item Global memory writes: 16² = 256
+\item Total memory accesses: 656
+\item Compute operations: 25 ops × 256 = 6400
+\end{itemize}
+
+New compute-to-global-memory-access ratio:
+\[
+\frac{6400}{656} \approx 9.76
+\]
+
+This shows a significant improvement due to reduced global memory accesses and increased reuse via shared memory.
+\subsection{Results}
+\label{sec:orgc503630}
+
+\begin{table}[htbp]
+\caption{Problem 3 Runtime}
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Implementation & Wall-clock runtime\\
+\hline
+Original serial program & 0.010039\\
+\hline
+CUDA: Copying data from host to device & 0.001752\\
+\hline
+CUDA: Launching kernel & 0.000047\\
+\hline
+CUDA: Copying data from device to host & 0.010149\\
+\hline
+\end{tabular}
+\end{table}
+
+In this case, the serial time is more efficient than the total runtime of CUDA program. The copying process takes too much time to make the parallel computation on GPU usefull.
+\newpage
+\section{Problem 4}
+\label{sec:orgeb40c10}
+\subsection{Problem 4 Analysis (Max Pooling)}
+\label{sec:org8d38712}
+\subsubsection{Estimation without tiling}
+\label{sec:org4aa8196}
+
+\begin{itemize}
+\item Reads 25 pixels per output
+\item Writes 1 output pixel
+\item Performs 24 comparisons
+\end{itemize}
+
+Total memory accesses: 26  
+Total operations: 24
+
+\[
+\text{Compute-to-Memory Ratio (MaxPool)} = \frac{24}{26} \approx 0.92
+\]
+\subsubsection{Pseudo-Code}
+\label{sec:org8763f23}
+
+\begin{lstlisting}[language=C,numbers=none]
+__global__ void tiled_maxpooling_kernel(int* input, int* output, int width, int height, int pool_size)
+{
+    const int TILE_SIZE = 16;
+    const int RADIUS = pool_size / 2;
+    __shared__ int tile[TILE_SIZE + 4][TILE_SIZE + 4];
+
+    int tx = threadIdx.x, ty = threadIdx.y;
+    int row = blockIdx.y * TILE_SIZE + ty;
+    int col = blockIdx.x * TILE_SIZE + tx;
+
+    // Load tile into shared memory with padding
+    for (int dy = 0; dy < pool_size; ++dy)
+        for (int dx = 0; dx < pool_size; ++dx) {
+            int global_row = row + dy - RADIUS;
+            int global_col = col + dx - RADIUS;
+            tile[ty + dy][tx + dx] =
+                (global_row >= 0 && global_row < height && global_col >= 0 && global_col < width)
+                ? input[global_row * width + global_col]
+                : INT_MIN;
+        }
+
+    __syncthreads();
+
+    // Max-pooling
+    if (row < height && col < width) {
+        int maxVal = INT_MIN;
+        for (int i = 0; i < pool_size; ++i)
+            for (int j = 0; j < pool_size; ++j)
+                maxVal = max(maxVal, tile[ty + i][tx + j]);
+        output[row * width + col] = maxVal;
+    }
+}
+\end{lstlisting}
+\subsubsection{Estimation with tiling}
+\label{sec:org35eb36b}
+
+Assuming TILE\_SIZE = 16 and filter/pool size = 5:
+\begin{itemize}
+\item Shared memory loads: (16 + 4)² = 400 per block
+\item Global writes: 16² = 256 per block
+\item Total memory accesses per block = 656
+\item Output computations: 256 threads per block
+\end{itemize}
+
+Total compute ops: 24 × 256 = 6144
+
+\[
+\text{Compute-to-Memory Ratio (MaxPool-Tiled)} = \frac{6144}{656} \approx 9.4
+\]
+
+Using tiling significantly improves the compute-to-memory ratio:
+\begin{itemize}
+\item Max-pooling improved from \textbf{\textbf{0.92 → \textasciitilde{}9.4}}
+\end{itemize}
+
+These improvements help reduce global memory bandwidth usage and increase performance by exploiting data reuse in shared memory.
+\subsection{Results}
+\label{sec:org603541e}
+
+\begin{table}[htbp]
+\caption{Problem 4 Runtime}
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Implementation & Wall-clock runtime\\
+\hline
+Original serial program & 0.02329700\\
+\hline
+CUDA: Copying data from host to device & 0.00271099\\
+\hline
+CUDA: Running kernel 1 for convolution & 0.00005400\\
+\hline
+CUDA: Running kernel 2 for max-pooling & 0.00000499\\
+\hline
+CUDA: Copying data from device to host & 0.01420900\\
+\hline
+\end{tabular}
+\end{table}
+
+In this case, the CUDA program runtime is more efficient than the serial program. The computation of 2 filters (blur and maxpooling) makes the use of GPU usefull.
+\end{document}
